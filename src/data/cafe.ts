@@ -24,12 +24,16 @@ export const cafe = {
       "Vi säljer Herr Bröds nybakade sortiment på Sandvägen — beställ i god tid inför helg och kalas, eller kom förbi och se vad som finns kvar i disken.",
   },
 
+  // TODO: en tredje stycke saknas fortfarande — vem/vilka driver butiken
+  // idag, och hur länge har den funnits i Mollösund? Ett förnamn och ett
+  // årtal gör texten trovärdig i stället för generisk. Lägg till som ett
+  // tredje element i `paragraphs` när vi har svaret — skriv den som en
+  // vanlig mening, inte som en TODO-rad, den renderas rakt av som brödtext.
   about: {
     heading: "Om oss",
     paragraphs: [
       "Mollösunds Bröd & Bullar är den lilla butiken på Sandvägen där du hittar Herr Bröds sortiment av surdegsbröd, vetebullar, längder och bakverk — mitt i hjärtat av Mollösund.",
       "Sortimentet växlar med säsongen, och en del av det mest efterfrågade — mousse­tårtor, glutenfritt, veganskt och andra specialbeställningar — behöver beställas i god tid. Se villkoren under Beställ nedan.",
-      "TODO: kort stycke om vem/vilka som driver butiken idag och hur länge ni funnits i Mollösund — gärna ett förnamn och ett årtal, det är sånt som gör texten trovärdig i stället för generisk.",
     ],
   },
 
