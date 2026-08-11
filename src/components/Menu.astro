@@ -3,24 +3,19 @@
 // som en liten "prislapp", caféets eget signaturgrepp (se tokens-v1.css,
 // --tag-clip). I teman utan --tag-clip faller den bara tillbaka till en
 // vanlig rektangel, utan att komponenten behöver veta om det.
-import { menu, isExample, allergenLabels } from "../data/menu";
-
-function allergenText(codes: string[]) {
-  if (!codes.length) return null;
-  return codes.map((c) => allergenLabels[c as keyof typeof allergenLabels]).join(", ");
-}
+import { menu, allergensConfirmed } from "../data/menu";
 ---
 
 <section class="menu section" id="meny">
   <div class="wrap">
     <div class="menu__intro">
       <h2>Meny</h2>
-      <p class="menu__kicker">Bakas varje morgon, säljs så länge det räcker.</p>
+      <p class="menu__kicker">Priser sommaren 2026 — hämtas i butiken på Sandvägen.</p>
       {
-        isExample && (
+        !allergensConfirmed && (
           <p class="menu__notice">
-            Exempelmeny — rätter, priser och allergener uppdateras när ni skickar er riktiga
-            sortiment till oss.
+            TODO: allergeninformation saknas ännu för sortimentet nedan — fråga i butiken eller
+            kontakta oss vid allergi tills vi fått uppgifterna från er.
           </p>
         )
       }
@@ -34,13 +29,7 @@ function allergenText(codes: string[]) {
             <ul role="list" class="menu__items">
               {category.items.map((item) => (
                 <li class="menu__item">
-                  <div class="menu__item-text">
-                    <span class="menu__item-name">{item.name}</span>
-                    {item.description && <p class="menu__item-desc">{item.description}</p>}
-                    {allergenText(item.allergens) && (
-                      <p class="menu__item-allergens">Innehåller: {allergenText(item.allergens)}</p>
-                    )}
-                  </div>
+                  <span class="menu__item-name">{item.name}</span>
                   <span class="menu__tag" aria-hidden="false">
                     {item.price} kr
                   </span>
@@ -66,9 +55,9 @@ function allergenText(codes: string[]) {
 
   .menu__notice {
     margin-top: 0.5em;
-    color: var(--color-text-muted);
-    font-style: italic;
-    max-width: 48ch;
+    color: var(--color-accent-strong, var(--color-accent));
+    font-size: 0.9rem;
+    max-width: 52ch;
   }
 
   .menu__categories {
@@ -95,10 +84,10 @@ function allergenText(codes: string[]) {
 
   .menu__item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1.25rem;
-    padding-block: 0.9rem;
+    padding-block: 0.7rem;
   }
 
   .menu__item + .menu__item {
@@ -111,19 +100,6 @@ function allergenText(codes: string[]) {
     font-size: 1.08rem;
   }
 
-  .menu__item-desc {
-    margin-top: 0.2em;
-    color: var(--color-text-muted);
-    font-size: 0.95rem;
-  }
-
-  .menu__item-allergens {
-    margin-top: 0.35em;
-    color: var(--color-text-muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.01em;
-  }
-
   .menu__tag {
     flex: none;
     display: inline-flex;
@@ -131,7 +107,6 @@ function allergenText(codes: string[]) {
     justify-content: center;
     min-width: 4.5em;
     padding: 0.5em 0.9em;
-    margin-top: 0.15em;
     background: var(--color-surface-strong, var(--color-surface));
     color: var(--color-text);
     font-family: var(--font-display);

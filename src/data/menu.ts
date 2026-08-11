@@ -1,120 +1,74 @@
-// Menydata för Bröd och bullar.
+// Menydata för Mollösunds Bröd & Bullar.
 //
-// VIKTIGT: Detta är en exempelmeny, inte kundens riktiga sortiment eller
-// priser (se CLAUDE.md, "Saknas / ska in" → meny med priser + allergener).
-// Raderna nedan är skrivna för att vara realistiska nog att bedöma layouten
-// på — konkreta rätter, riktiga priser för ett svenskt café — men de ska
-// bytas ut mot kundens faktiska meny innan lansering. `isExample: true`
-// styr den synliga "exempelmeny"-markeringen i <Menu>-komponenten.
+// Priserna nedan är caféets RIKTIGA prislista, "Sommaren 2026" — skickad av
+// kunden 2026-08-11 (skärmdump av deras egen prislista). Det här är alltså
+// inte längre en exempelmeny.
+//
+// Vad som FORTFARANDE saknas: allergener. Prislistan innehåller ingen
+// allergeninformation, så vi gissar inte fram den per rad (fel gissning på
+// en allergen är värre än att inte visa något alls). `allergensConfirmed`
+// styr en synlig TODO-notis i <Menu>-komponenten i stället.
 
-export const isExample = true;
-
-export const allergenLabels = {
-  gluten: "Gluten",
-  mjolk: "Mjölk",
-  agg: "Ägg",
-  notter: "Nötter",
-  mandel: "Mandel",
-  soja: "Soja",
-};
+export const allergensConfirmed = false;
 
 export const menu = [
   {
-    category: "Bullar & fikabröd",
+    category: "Surdegsbröd",
     items: [
-      {
-        name: "Kardemummabulle",
-        description: "Nybakad efter morgonpasset, rejält kardemummakrossad topping.",
-        price: 35,
-        allergens: ["gluten", "mjolk", "agg"],
-      },
-      {
-        name: "Kanelbulle",
-        description: "Långjäst deg, pärlsocker på toppen — klassikern, gjord som den ska.",
-        price: 32,
-        allergens: ["gluten", "mjolk", "agg"],
-      },
-      {
-        name: "Wienerbröd med vaniljkräm",
-        description: "Smördeg vikt för hand, fylld med hemkokt vaniljkräm.",
-        price: 42,
-        allergens: ["gluten", "mjolk", "agg"],
-      },
-      {
-        name: "Mandeltoppar",
-        description: "Två åt gången — knapriga i kanten, mjuka i mitten.",
-        price: 29,
-        allergens: ["gluten", "mjolk", "agg", "mandel"],
-      },
+      { name: "Ciabatta", price: 65 },
+      { name: "Valnötsbröd", price: 78 },
+      { name: "Frukt- och hasselnötsbröd", price: 78 },
+      { name: "Slussens porter", price: 78 },
+      { name: "Levain rustique", price: 73 },
+      { name: "Herr Bröds ljusa", price: 73 },
+      { name: "Danskt rågbröd med tranbär", price: 75 },
+      { name: "Fransmän (surdegsbaguette)", price: 55 },
+      { name: "Rostad råg & havre", price: 73 },
+      { name: "Grävling bröd", price: 73 },
+      { name: "Malte bröd", price: 73 },
+      { name: "Baguette", price: 39 },
     ],
   },
   {
-    category: "Bröd",
+    category: "Vetedeg",
     items: [
-      {
-        name: "Surdegslimpa, 18 timmars jäsning",
-        description: "Vår grundsurdeg, bakad på morgonen — hel limpa att ta med hem.",
-        price: 79,
-        allergens: ["gluten"],
-      },
-      {
-        name: "Rågsurdeg med solrosfrön",
-        description: "Mörkare, tyngre limpa, gott till ost och rimmat.",
-        price: 85,
-        allergens: ["gluten"],
-      },
-      {
-        name: "Frallor, 4-pack",
-        description: "Mjuka lunchfrallor, bakas fredag och lördag.",
-        price: 45,
-        allergens: ["gluten"],
-      },
+      { name: "Kanelbulle", price: 39 },
+      { name: "Mandel-/kardemummabulle", price: 39 },
+      { name: "Solbulle", price: 39 },
+      { name: "Muffinskaka, choklad/tosca", price: 160 },
+      { name: "Muffinskaka, kardemumma/hallon", price: 160 },
+      { name: "Fylld längd, mandel/kardemumma", price: 160 },
+      { name: "Fylld längd, kanel", price: 160 },
+      { name: "Slät längd", price: 108 },
     ],
   },
   {
-    category: "Smörgåsar",
+    category: "Frallor & småbaguette",
     items: [
-      {
-        name: "Dagens smörgås",
-        description: "Skriven på tavlan vid disken, ändras dag för dag.",
-        price: 95,
-        allergens: ["gluten", "mjolk"],
-      },
-      {
-        name: "Skagenmacka på surdeg",
-        description: "Handskalade räkor, dill, citron.",
-        price: 115,
-        allergens: ["gluten", "agg", "mjolk"],
-      },
-      {
-        name: "Getost & honung",
-        description: "Rostad surdeg, valnötter, en skvätt lokal honung.",
-        price: 89,
-        allergens: ["gluten", "mjolk", "notter"],
-      },
+      { name: "Småfranska", price: 25 },
+      { name: "Rostad råg & havre-fralla", price: 25 },
+      { name: "Grävling-fralla", price: 25 },
+      { name: "Malte-fralla", price: 25 },
     ],
   },
   {
-    category: "Att dricka",
+    category: "Kondisbitar",
     items: [
-      {
-        name: "Kaffe",
-        description: "Bryggt löpande hela dagen, gratis påtår i caféet.",
-        price: 32,
-        allergens: [],
-      },
-      {
-        name: "Cortado",
-        description: "",
-        price: 38,
-        allergens: ["mjolk"],
-      },
-      {
-        name: "Chai latte",
-        description: "Eget kryddat te, mjölk eller havre.",
-        price: 45,
-        allergens: ["mjolk"],
-      },
+      { name: "Saltkolabiskvi", price: 34 },
+      { name: "Chokladbiskvi", price: 35 },
+      { name: "Månadens biskvi", price: 37 },
+      { name: "Dammsugare", price: 33 },
+      { name: "Mazarin", price: 39 },
+      { name: "Tosca mazarin", price: 42 },
+    ],
+  },
+  {
+    category: "Småkakor i påse",
+    items: [
+      { name: "Choklad/havssalt", price: 67 },
+      { name: "Syltkakor", price: 67 },
+      { name: "Havrekakor", price: 67 },
+      { name: "Biscotti", price: 67 },
     ],
   },
 ];

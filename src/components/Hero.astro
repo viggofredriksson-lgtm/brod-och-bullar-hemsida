@@ -21,7 +21,7 @@ const hasVideo = Boolean(videoMp4 || videoWebm);
 const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-preference)";
 ---
 
-<section class={`hero hero--${variant}`} id="hero" aria-label="Bröd och bullar">
+<section class={`hero hero--${variant}`} id="hero" aria-label={cafe.name}>
   <div class="hero__media">
     <img class="hero__poster" src={poster} alt="" />
     {

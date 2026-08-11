@@ -8,17 +8,22 @@ const { regular, exceptions } = cafe.openingHours;
 <section class="findus section" id="hitta-hit">
   <div class="wrap findus__grid">
     <div>
-      <p class="eyebrow">Storgatan, mitt i stan</p>
+      <p class="eyebrow">{address.locality}, {address.street}</p>
       <h2>Hitta hit</h2>
 
       <address class="findus__address">
-        {address.placeholder && <span class="findus__todo">TODO: </span>}{address.value}
+        {address.street}, {address.locality}
+        {" "}
+        <span class="findus__todo">(TODO: husnummer och postnummer saknas)</span>
         <br />
         {
           phone.placeholder ? (
             <span class="findus__todo">TODO: {phone.value}</span>
           ) : (
-            <a href={`tel:${phone.value}`}>{phone.value}</a>
+            <>
+              <a href={`sms:${phone.value.replace(/\s/g, "")}`}>{phone.value}</a>{" "}
+              <span class="findus__note">(sms för beställning)</span>
+            </>
           )
         }
         <br />
@@ -86,6 +91,12 @@ const { regular, exceptions } = cafe.openingHours;
 
   .findus__todo {
     color: var(--color-accent-strong, var(--color-accent));
+    font-size: 0.9rem;
+  }
+
+  .findus__note {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
   }
 
   .findus__hours-heading {

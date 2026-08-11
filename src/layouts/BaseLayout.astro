@@ -29,9 +29,13 @@ const jsonLd: Record<string, unknown> = {
 };
 
 if (hasRealAddress) {
+  const { street, locality, postalCode } = cafe.contact.address;
   jsonLd.address = {
     "@type": "PostalAddress",
-    streetAddress: cafe.contact.address.value,
+    streetAddress: street,
+    addressLocality: locality,
+    addressCountry: "SE",
+    ...(postalCode ? { postalCode } : {}),
   };
 }
 if (hasRealPhone) jsonLd.telephone = cafe.contact.phone.value;

@@ -12,9 +12,15 @@ const year = new Date().getFullYear();
     <div>
       <p class="site-footer__wordmark">{cafe.name}</p>
       <address>
-        {address.placeholder ? <span class="todo">TODO: {address.value}</span> : address.value}
+        {address.street}, {address.locality}
         <br />
-        {phone.placeholder ? <span class="todo">TODO: {phone.value}</span> : <a href={`tel:${phone.value}`}>{phone.value}</a>}
+        {
+          phone.placeholder ? (
+            <span class="todo">TODO: {phone.value}</span>
+          ) : (
+            <a href={`sms:${phone.value.replace(/\s/g, "")}`}>{phone.value} (sms)</a>
+          )
+        }
         <br />
         {email.placeholder ? <span class="todo">TODO: {email.value}</span> : <a href={`mailto:${email.value}`}>{email.value}</a>}
       </address>

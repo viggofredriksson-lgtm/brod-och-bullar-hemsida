@@ -14,6 +14,8 @@
 import { cafe } from "../data/cafe";
 
 const orderTypes = ["Tårta", "Catering", "Företagsfika", "Annat"];
+const { leadTimes, note } = cafe.ordering;
+const smsHref = `sms:${cafe.contact.phone.value.replace(/\s/g, "")}`;
 ---
 
 <section class="order section" id="bestallning">
@@ -22,12 +24,29 @@ const orderTypes = ["Tårta", "Catering", "Företagsfika", "Annat"];
       <p class="eyebrow">Fest, fika, kalas</p>
       <h2>Beställ tårta &amp; catering</h2>
       <p>
-        Fyll i formuläret så återkommer vi med pris och bekräftelse — oftast inom ett par
-        vardagar. Ju tidigare desto bättre, särskilt inför helger.
+        Fyll i formuläret så återkommer vi med pris och bekräftelse. Tänk på ledtiderna nedan —
+        särskilt inför helg och kalas.
       </p>
+
+      <dl class="order__leadtimes">
+        {
+          leadTimes.map((row) => (
+            <>
+              <dt>{row.items}</dt>
+              <dd>{row.deadline}</dd>
+            </>
+          ))
+        }
+      </dl>
+      <p class="order__note">{note}</p>
+      <p class="order__note">
+        Vill du hellre sms:a din beställning direkt? Skicka till{" "}
+        <a href={smsHref}>{cafe.contact.phone.value}</a>.
+      </p>
+
       {
         cafe.contact.orderEmail.placeholder && (
-          <p class="order__todo">TODO: mejladress för beställningar är inte satt än.</p>
+          <p class="order__todo">TODO: mejladress för beställningar via formuläret är inte satt än.</p>
         )
       }
     </div>
@@ -117,6 +136,36 @@ const orderTypes = ["Tårta", "Catering", "Företagsfika", "Annat"];
   .order__todo {
     color: var(--color-accent-strong, var(--color-accent));
     font-size: 0.9rem;
+  }
+
+  .order__leadtimes {
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem 1.15rem;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+  }
+
+  .order__leadtimes dt {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .order__leadtimes dd {
+    margin: 0.15em 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+
+  .order__note {
+    margin-top: 0.75em;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .order__note a {
+    color: var(--color-accent-strong, var(--color-accent));
   }
 
   .order__hp {

@@ -1,4 +1,4 @@
-// Innehållsdata för Bröd och bullar.
+// Innehållsdata för Mollösunds Bröd & Bullar.
 //
 // Fält märkta `placeholder: true` är fabricerade platshållare — inte riktig
 // information — och renderas med en synlig "TODO"-markering i gränssnittet
@@ -8,22 +8,28 @@
 // Löptext (hero, om-caféet) är däremot skriven som färdig svensk copy — inte
 // platshållartext — så designen går att bedöma på riktigt. Den ska stämmas av
 // med kunden innan lansering, men är inte markerad TODO i gränssnittet.
+//
+// Källa för verifierad info nedan (namn, adress, priser, beställningsvillkor):
+// caféets Instagram-bio och prislista "Sommaren 2026", skickade av kunden
+// 2026-08-11. Butiken säljer sortiment från leverantören Herr Bröd
+// (@herr_brod) — den bakar inte nödvändigtvis själv på plats, vilket present-
+// och hero-texten är skriven för att spegla ärligt i stället för att gissa.
 
 export const cafe = {
-  name: "Bröd och bullar",
+  name: "Mollösunds Bröd & Bullar",
 
   hero: {
-    heading: "Bakat på Storgatan sen sex på morgonen",
+    heading: "Bröd och bullar mitt i Mollösund",
     subheading:
-      "Surdegsbröd, kanelbullar och kaffe — bakat i ugnen bakom disken, inte i en fabrik nån annanstans.",
+      "Vi säljer Herr Bröds nybakade sortiment på Sandvägen — beställ i god tid inför helg och kalas, eller kom förbi och se vad som finns kvar i disken.",
   },
 
   about: {
     heading: "Om oss",
     paragraphs: [
-      "Bröd och bullar öppnade dörrarna som ett litet skafferi med två bakbord och en vedeldad ugn. Idag är ugnen eldriven, men degen jäser fortfarande lika länge — surdegen har vi haft levande sen starten.",
-      "Vi bakar allt på plats, varje morgon. Det syns på skorpan när brödet är för färskt och på kön när kanelbullarna kommer ut klockan sju.",
-      "TODO: kort stycke om vem/vilka som driver caféet idag — gärna ett förnamn och ett årtal, det är sånt som gör texten trovärdig i stället för generisk.",
+      "Mollösunds Bröd & Bullar är den lilla butiken på Sandvägen där du hittar Herr Bröds sortiment av surdegsbröd, vetebullar, längder och bakverk — mitt i hjärtat av Mollösund.",
+      "Sortimentet växlar med säsongen, och en del av det mest efterfrågade — mousse­tårtor, glutenfritt, veganskt och andra specialbeställningar — behöver beställas i god tid. Se villkoren under Beställ nedan.",
+      "TODO: kort stycke om vem/vilka som driver butiken idag och hur länge ni funnits i Mollösund — gärna ett förnamn och ett årtal, det är sånt som gör texten trovärdig i stället för generisk.",
     ],
   },
 
@@ -32,12 +38,20 @@ export const cafe = {
   // ska bara beskriva VAD som saknas, inte upprepa ordet TODO.
   contact: {
     address: {
-      value: "gatuadress, postnummer och ort",
-      placeholder: true,
+      street: "Sandvägen",
+      locality: "Mollösund",
+      postalCode: "",
+      // TODO: husnummer och postnummer saknas fortfarande — Instagram-bion
+      // anger bara "Sandvägen, Mollösund" utan nummer.
+      placeholder: false,
     },
+    // Numret från prislistan är caféets sms-beställningsnummer — inte
+    // nödvändigtvis en linje som svarar på vanliga samtal. Komponenterna
+    // märker ut det som "sms" i gränssnittet, inte bara "telefon".
     phone: {
-      value: "telefonnummer",
-      placeholder: true,
+      value: "+46 70 380 35 65",
+      preferredChannel: "sms",
+      placeholder: false,
     },
     email: {
       value: "mejladress för allmänna frågor",
@@ -49,6 +63,23 @@ export const cafe = {
     },
   },
 
+  // Beställningsvillkor för förbeställningar (tårtor, catering m.m.), hämtade
+  // ordagrant ur prislistan "Sommaren 2026". Det här är caféets EGNA
+  // ledtider för sitt sms-flöde — vi visar dem som kontext i
+  // beställningsformuläret så förväntningarna stämmer, även om formuläret
+  // själv går via mejl (se CLAUDE.md, avgränsat scope).
+  ordering: {
+    placeholder: false,
+    leadTimes: [
+      { items: "Bröd, frallor, baguette, fransmän och bullar", deadline: "senast kl. 20:00, två dagar innan leverans" },
+      { items: "Tårtor & bakelser (ordinarie sortiment) samt kondisbitar", deadline: "senast kl. 20:00, fyra dagar innan leverans" },
+      { items: "Moussetårtor samt glutenfria, veganska, laktosfria eller andra specialtårtor/bakelser", deadline: "senast kl. 20:00, sex dagar innan leverans" },
+    ],
+    note: "Herr Bröd levererar inte på söndagar — räkna med det när du planerar din beställning.",
+  },
+
+  // Caféets EGNA öppettider (när butiken har öppet för walk-in) är inte
+  // samma sak som beställningsledtiderna ovan och har inte skickats än.
   openingHours: {
     placeholder: true,
     // TODO: ersätt med riktiga öppettider, inkl. avvikande dagar
@@ -62,13 +93,15 @@ export const cafe = {
   },
 
   social: {
+    // TODO: vi har sett caféets Instagram-BIO (skickad som skärmdump) men
+    // inte fått själva konto-URL:en eller ett Facebook-konto bekräftat.
     instagram: { url: "", handle: "Instagram-konto", placeholder: true },
     facebook: { url: "", handle: "Facebook-sida", placeholder: true },
   },
 
   map: {
     placeholder: true,
-    embedUrl: "", // TODO: karta/embed-länk när adressen är bekräftad
+    embedUrl: "", // TODO: karta/embed-länk när husnummer + postnummer är bekräftat
   },
 
   logo: {
@@ -77,7 +110,7 @@ export const cafe = {
 
   heroMedia: {
     // TODO: självhostad hero-loop (.mp4/.webm, max ~2–3 MB, 8–12 sek, ingen ljudkanal)
-    // och en riktig poster-bild (foto av bakning/ugn). Tills dess visas en
+    // och en riktig poster-bild (foto från butiken/disken). Tills dess visas en
     // grafisk platshållare — se public/images/placeholder-hero.svg.
     videoMp4: "",
     videoWebm: "",
