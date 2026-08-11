@@ -78,18 +78,23 @@ export const cafe = {
     note: "Herr Bröd levererar inte på söndagar — räkna med det när du planerar din beställning.",
   },
 
-  // Caféets EGNA öppettider (när butiken har öppet för walk-in) är inte
-  // samma sak som beställningsledtiderna ovan och har inte skickats än.
+  // Caféets EGNA öppettider (när butiken har öppet för walk-in), skickade
+  // av kunden 2026-08-11. Det är ett SÄSONGSSTÄLLE — bara öppet på
+  // sommaren, och enligt kunden stängt just nu (mellan säsonger) trots att
+  // tiderna nedan är de som gäller när det är öppet.
   openingHours: {
-    placeholder: true,
-    // TODO: ersätt med riktiga öppettider, inkl. avvikande dagar
-    // (röda dagar, sommarstängt etc.) när kunden skickar dem.
+    placeholder: false,
+    seasonal: true,
+    seasonalNote: "Öppet endast under sommarsäsongen.",
+    // TODO (manuellt underhåll, uppdatera själva när säsongen öppnar/stänger):
+    // sätt till `false` när butiken har öppet för säsongen, `true` när den är
+    // stängd mellan säsonger. Vi har inga exakta säsongsdatum att räkna på.
+    closedForSeason: true,
     regular: [
-      { day: "Måndag–fredag", hours: "t.ex. 07:00–17:00" },
-      { day: "Lördag", hours: "t.ex. 08:00–15:00" },
-      { day: "Söndag", hours: "t.ex. 09:00–14:00" },
+      { day: "Måndag–lördag", hours: "08:00–15:30" },
+      { day: "Söndag", hours: "10:00–14:00" },
     ],
-    exceptions: [{ label: "avvikande dag, t.ex. midsommarafton", hours: "Stängt" }],
+    exceptions: [],
   },
 
   social: {

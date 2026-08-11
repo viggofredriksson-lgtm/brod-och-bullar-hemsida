@@ -2,7 +2,7 @@
 import { cafe } from "../data/cafe";
 
 const { address, phone, email } = cafe.contact;
-const { regular } = cafe.openingHours;
+const { regular, seasonal, closedForSeason } = cafe.openingHours;
 const { instagram, facebook } = cafe.social;
 const year = new Date().getFullYear();
 ---
@@ -27,9 +27,12 @@ const year = new Date().getFullYear();
     </div>
 
     <div>
-      <p class="site-footer__heading">
-        Öppettider{cafe.openingHours.placeholder && <span class="todo"> (TODO, ej bekräftade)</span>}
-      </p>
+      <p class="site-footer__heading">Öppettider</p>
+      {
+        seasonal && closedForSeason && (
+          <p class="site-footer__status">Säsongsstängt just nu</p>
+        )
+      }
       <ul role="list" class="site-footer__hours">
         {regular.map((row) => <li>{row.day}: {row.hours}</li>)}
       </ul>
@@ -101,6 +104,12 @@ const year = new Date().getFullYear();
     font-family: var(--font-display);
     font-style: italic;
     color: var(--color-ink-accent, var(--color-ink-text));
+  }
+
+  .site-footer__status {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
   }
 
   .site-footer__hours,

@@ -2,7 +2,7 @@
 import { cafe } from "../data/cafe";
 
 const { address, phone, email } = cafe.contact;
-const { regular, exceptions } = cafe.openingHours;
+const { regular, exceptions, seasonal, seasonalNote, closedForSeason } = cafe.openingHours;
 ---
 
 <section class="findus section" id="hitta-hit">
@@ -10,6 +10,14 @@ const { regular, exceptions } = cafe.openingHours;
     <div>
       <p class="eyebrow">{address.locality}, {address.street}</p>
       <h2>Hitta hit</h2>
+
+      {
+        seasonal && (
+          <p class={`findus__status ${closedForSeason ? "findus__status--closed" : "findus__status--open"}`}>
+            {closedForSeason ? "Stängt just nu — öppnar igen till sommaren" : "Öppet för säsongen"}
+          </p>
+        )
+      }
 
       <address class="findus__address">
         {address.street}, {address.locality}
@@ -37,11 +45,7 @@ const { regular, exceptions } = cafe.openingHours;
       </address>
 
       <h3 class="findus__hours-heading">Öppettider</h3>
-      {
-        cafe.openingHours.placeholder && (
-          <p class="findus__todo">TODO: öppettider är inte bekräftade av caféet än.</p>
-        )
-      }
+      {seasonal && <p class="findus__note">{seasonalNote}</p>}
       <dl class="findus__hours">
         {
           regular.map((row) => (
@@ -75,7 +79,36 @@ const { regular, exceptions } = cafe.openingHours;
   }
 
   .findus__grid h2 {
-    margin-block: 0.3em 0.9em;
+    margin-block: 0.3em 0.6em;
+  }
+
+  .findus__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.4em 0.85em;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .findus__status::before {
+    content: "";
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .findus__status--closed {
+    background: var(--color-surface-strong, var(--color-surface));
+    color: var(--color-accent-strong, var(--color-accent));
+  }
+
+  .findus__status--open {
+    background: var(--color-surface-strong, var(--color-surface));
+    color: #2f5230;
   }
 
   .findus__address {
