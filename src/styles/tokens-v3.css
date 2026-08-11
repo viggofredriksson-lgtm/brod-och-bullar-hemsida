@@ -1,0 +1,15 @@
+/*
+  tokens-v3.css — "Nostalgiskt konditori" (STUB)
+
+  TODO: nästa arbetsomgång. Byggs enligt CLAUDE.md: 50-talets bageriskylt,
+  lekfullt. Display-font i rubriker, tightare sättning. Djupgrön/kräm med
+  guldaccent. Samma variabelnamn som tokens-v1.css måste sättas här —
+  base.css och komponenterna är oförändrade, bara värdena skiljer.
+
+  Tills denna fylls i faller /v3 tillbaka på webbläsarens standardtypsnitt
+  och saknar färgtokens — sidan ska därför inte visas för kund förrän detta
+  är klart.
+*/
+
+:root {
+}

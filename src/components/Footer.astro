@@ -1,0 +1,120 @@
+---
+import { cafe } from "../data/cafe";
+
+const { address, phone, email } = cafe.contact;
+const { regular } = cafe.openingHours;
+const { instagram, facebook } = cafe.social;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__grid">
+    <div>
+      <p class="site-footer__wordmark">{cafe.name}</p>
+      <address>
+        {address.placeholder ? <span class="todo">TODO: {address.value}</span> : address.value}
+        <br />
+        {phone.placeholder ? <span class="todo">TODO: {phone.value}</span> : <a href={`tel:${phone.value}`}>{phone.value}</a>}
+        <br />
+        {email.placeholder ? <span class="todo">TODO: {email.value}</span> : <a href={`mailto:${email.value}`}>{email.value}</a>}
+      </address>
+    </div>
+
+    <div>
+      <p class="site-footer__heading">
+        Öppettider{cafe.openingHours.placeholder && <span class="todo"> (TODO, ej bekräftade)</span>}
+      </p>
+      <ul role="list" class="site-footer__hours">
+        {regular.map((row) => <li>{row.day}: {row.hours}</li>)}
+      </ul>
+    </div>
+
+    <div>
+      <p class="site-footer__heading">Följ oss</p>
+      <ul role="list" class="site-footer__social">
+        <li>
+          {
+            instagram.placeholder ? (
+              <span class="todo">TODO: Instagram</span>
+            ) : (
+              <a href={instagram.url}>Instagram</a>
+            )
+          }
+        </li>
+        <li>
+          {
+            facebook.placeholder ? (
+              <span class="todo">TODO: Facebook</span>
+            ) : (
+              <a href={facebook.url}>Facebook</a>
+            )
+          }
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="site-footer__copyright wrap">© {year} {cafe.name}</p>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ink);
+    color: var(--color-ink-text);
+    padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+  }
+
+  .site-footer a {
+    color: var(--color-ink-accent, var(--color-ink-text));
+  }
+
+  .site-footer address {
+    font-style: normal;
+    line-height: 1.8;
+    margin-top: 0.75rem;
+  }
+
+  .todo {
+    color: var(--color-ink-accent, var(--color-ink-text));
+    opacity: 0.85;
+  }
+
+  .site-footer__wordmark {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--color-ink-accent, var(--color-ink-text));
+  }
+
+  .site-footer__hours,
+  .site-footer__social {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .site-footer__copyright {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(251, 246, 236, 0.15);
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+
+  @media (min-width: 48em) {
+    .site-footer__grid {
+      grid-template-columns: 1.2fr 1fr 1fr;
+    }
+  }
+</style>

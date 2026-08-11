@@ -1,0 +1,15 @@
+/*
+  tokens-v2.css — "Skandinaviskt rent" (STUB)
+
+  TODO: nästa arbetsomgång. Byggs enligt CLAUDE.md: lugnt, luftigt, produkten
+  i fokus. Grotesk med mycket whitespace, off-white + ett accentblått.
+  Samma variabelnamn som tokens-v1.css måste sättas här — base.css och
+  komponenterna är oförändrade, bara värdena skiljer.
+
+  Tills denna fylls i faller /v2 tillbaka på webbläsarens standardtypsnitt
+  och saknar färgtokens — sidan ska därför inte visas för kund förrän detta
+  är klart.
+*/
+
+:root {
+}

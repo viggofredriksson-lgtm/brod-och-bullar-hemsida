@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-labelledby="phTitle2">
+  <title id="phTitle2">Platshållare — foto saknas</title>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#e8dcc0" />
+      <stop offset="100%" stop-color="#c9793a" />
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1100" fill="url(#bg2)" />
+  <g opacity="0.45" fill="none" stroke="#2a1b12" stroke-width="2">
+    <circle cx="620" cy="360" r="150" />
+    <circle cx="700" cy="520" r="90" />
+    <circle cx="480" cy="560" r="60" />
+  </g>
+  <g transform="translate(40 1030)">
+    <rect x="0" y="-42" width="270" height="42" rx="3" fill="#2a1b12" opacity="0.6" />
+    <text x="16" y="-14" font-family="Georgia, serif" font-size="18" fill="#f2ead9">
+      Foto saknas — TODO
+    </text>
+  </g>
+</svg>

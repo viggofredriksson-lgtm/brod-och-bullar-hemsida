@@ -1,0 +1,78 @@
+---
+// Temporär versionsväljare för kundgranskning — inte en del av den
+// slutgiltiga leveransen. Tas bort eller ersätts med en redirect till den
+// valda versionen när kunden bestämt sig (se CLAUDE.md).
+import "../styles/tokens-v1.css";
+import "../styles/base.css";
+
+const versions = [
+  { href: "/v1", label: "v1 — Varm & hantverk", ready: true, desc: "Mjöl, trä, händer i deg. Terracotta och mörkbrun." },
+  { href: "/v2", label: "v2 — Skandinaviskt rent", ready: false, desc: "Lugnt, luftigt, produkten i fokus. Byggs i nästa arbetsomgång." },
+  { href: "/v3", label: "v3 — Nostalgiskt konditori", ready: false, desc: "50-talets bageriskylt, lekfullt. Byggs i nästa arbetsomgång." },
+];
+---
+
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bröd och bullar — välj version</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <main class="wrap section chooser">
+      <p class="eyebrow">Internt granskningsläge</p>
+      <h1>Bröd och bullar — välj version</h1>
+      <p class="chooser__intro">
+        Tre stilistiska riktningar på samma sajt. Klicka runt i den som är klar, resten läggs
+        till efter hand.
+      </p>
+      <ul role="list" class="chooser__list">
+        {
+          versions.map((v) => (
+            <li>
+              {v.ready ? (
+                <a class="button chooser__link" href={v.href}>
+                  {v.label}
+                </a>
+              ) : (
+                <span class="button button--ghost chooser__link chooser__link--disabled" aria-disabled="true">
+                  {v.label} (kommer snart)
+                </span>
+              )}
+              <p class="chooser__desc">{v.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+  </body>
+</html>
+
+<style>
+  .chooser__intro {
+    margin-block: 0.75rem 2.5rem;
+    max-width: 60ch;
+  }
+
+  .chooser__list {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .chooser__link {
+    display: inline-flex;
+  }
+
+  .chooser__link--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .chooser__desc {
+    margin-top: 0.5rem;
+    color: var(--color-text-muted);
+    max-width: 50ch;
+  }
+</style>

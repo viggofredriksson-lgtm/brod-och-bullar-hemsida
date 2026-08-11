@@ -1,0 +1,182 @@
+---
+// Beställningsformulär för tårta/catering/företagsfika — mailas till caféet.
+// Avsiktligt begränsat scope (se CLAUDE.md): inget kassaflöde, ingen
+// betalning, inga kundkonton.
+//
+// Netlify Forms: formuläret är statisk HTML med data-netlify="true", vilket
+// gör att Netlify hittar och registrerar det vid bygget — ingen egen
+// serverkod eller JS krävs, en vanlig POST fungerar. Honeypot-fältet
+// (bot-field) är Netlifys inbyggda spamskydd.
+//
+// TODO (drift, görs i Netlifys admin-gränssnitt, inte i kod): sätt caféets
+// mottagaradress för formulärnotiser till cafe.contact.orderEmail när den
+// är bekräftad.
+import { cafe } from "../data/cafe";
+
+const orderTypes = ["Tårta", "Catering", "Företagsfika", "Annat"];
+---
+
+<section class="order section" id="bestallning">
+  <div class="wrap order__grid">
+    <div class="order__intro">
+      <p class="eyebrow">Fest, fika, kalas</p>
+      <h2>Beställ tårta &amp; catering</h2>
+      <p>
+        Fyll i formuläret så återkommer vi med pris och bekräftelse — oftast inom ett par
+        vardagar. Ju tidigare desto bättre, särskilt inför helger.
+      </p>
+      {
+        cafe.contact.orderEmail.placeholder && (
+          <p class="order__todo">TODO: mejladress för beställningar är inte satt än.</p>
+        )
+      }
+    </div>
+
+    <form
+      class="order__form"
+      name="bestallning"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      action="/v1/tack"
+    >
+      <input type="hidden" name="form-name" value="bestallning" />
+      <p class="order__hp">
+        <label>
+          Lämna det här fältet tomt
+          <input name="bot-field" tabindex="-1" autocomplete="off" />
+        </label>
+      </p>
+
+      <div class="order__row">
+        <label for="namn">Namn *</label>
+        <input id="namn" name="namn" type="text" autocomplete="name" required />
+      </div>
+
+      <div class="order__row order__row--split">
+        <div>
+          <label for="epost">E-post *</label>
+          <input id="epost" name="epost" type="email" autocomplete="email" required />
+        </div>
+        <div>
+          <label for="telefon">Telefon</label>
+          <input id="telefon" name="telefon" type="tel" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div class="order__row order__row--split">
+        <div>
+          <label for="typ">Typ av beställning *</label>
+          <select id="typ" name="typ" required>
+            {orderTypes.map((t) => (
+              <option value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for="datum">Önskat datum *</label>
+          <input id="datum" name="datum" type="date" required />
+        </div>
+      </div>
+
+      <div class="order__row">
+        <label for="antal">Antal (t.ex. bitar eller personer) *</label>
+        <input id="antal" name="antal" type="text" inputmode="numeric" required />
+      </div>
+
+      <div class="order__row">
+        <label for="allergier">Allergier eller specialkost</label>
+        <input id="allergier" name="allergier" type="text" placeholder="T.ex. nötfritt, laktosfritt" />
+      </div>
+
+      <div class="order__row">
+        <label for="meddelande">Berätta mer om önskemålen *</label>
+        <textarea id="meddelande" name="meddelande" rows="5" required></textarea>
+      </div>
+
+      <button class="button" type="submit">Skicka beställning</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .order__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 1fr;
+  }
+
+  .order__intro p {
+    margin-top: 0.9em;
+  }
+
+  .order__intro h2 {
+    margin-block: 0.3em 0.6em;
+  }
+
+  .order__todo {
+    color: var(--color-accent-strong, var(--color-accent));
+    font-size: 0.9rem;
+  }
+
+  .order__hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .order__form {
+    display: grid;
+    gap: 1.15rem;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .order__row {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .order__row--split {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 34em) {
+    .order__row--split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  label {
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.7em 0.85em;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-line);
+    border-radius: var(--radius);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .order__form .button {
+    justify-self: start;
+    border: none;
+  }
+
+  @media (min-width: 56em) {
+    .order__grid {
+      grid-template-columns: 0.85fr 1.15fr;
+      align-items: start;
+    }
+  }
+</style>

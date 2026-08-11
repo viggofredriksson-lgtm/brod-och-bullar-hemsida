@@ -1,0 +1,68 @@
+---
+import { cafe } from "../data/cafe";
+
+const { heading, paragraphs } = cafe.about;
+---
+
+<section class="about section" id="om">
+  <div class="wrap about__grid">
+    <div class="about__text">
+      <p class="eyebrow">Sen starten</p>
+      <h2>{heading}</h2>
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+    <figure class="about__figure">
+      <img
+        src="/images/placeholder-photo.svg"
+        alt="TODO: foto från bageriet — t.ex. degknådning, ugnen eller disken en morgon"
+        loading="lazy"
+        width="900"
+        height="1100"
+      />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 1fr;
+  }
+
+  .about__text p + p {
+    margin-top: 1.1em;
+  }
+
+  .about__text h2 {
+    margin-block: 0.3em 0.9em;
+  }
+
+  .about__figure {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .about__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 56em) {
+    .about__grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+    }
+
+    /* Asymmetri: bildkolumnen bryter ur den vanliga sektionsrytmen genom att
+       skjuta ut något ur den centrerade griden i stället för att vara
+       symmetriskt inpassad. */
+    .about__figure {
+      justify-self: end;
+      width: 88%;
+    }
+  }
+</style>

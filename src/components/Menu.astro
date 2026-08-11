@@ -1,0 +1,148 @@
+---
+// Menyn är caféets viktigaste sida i sig — den byggs så priset alltid visas
+// som en liten "prislapp", caféets eget signaturgrepp (se tokens-v1.css,
+// --tag-clip). I teman utan --tag-clip faller den bara tillbaka till en
+// vanlig rektangel, utan att komponenten behöver veta om det.
+import { menu, isExample, allergenLabels } from "../data/menu";
+
+function allergenText(codes: string[]) {
+  if (!codes.length) return null;
+  return codes.map((c) => allergenLabels[c as keyof typeof allergenLabels]).join(", ");
+}
+---
+
+<section class="menu section" id="meny">
+  <div class="wrap">
+    <div class="menu__intro">
+      <h2>Meny</h2>
+      <p class="menu__kicker">Bakas varje morgon, säljs så länge det räcker.</p>
+      {
+        isExample && (
+          <p class="menu__notice">
+            Exempelmeny — rätter, priser och allergener uppdateras när ni skickar er riktiga
+            sortiment till oss.
+          </p>
+        )
+      }
+    </div>
+
+    <div class="menu__categories">
+      {
+        menu.map((category) => (
+          <div class="menu__category">
+            <h3>{category.category}</h3>
+            <ul role="list" class="menu__items">
+              {category.items.map((item) => (
+                <li class="menu__item">
+                  <div class="menu__item-text">
+                    <span class="menu__item-name">{item.name}</span>
+                    {item.description && <p class="menu__item-desc">{item.description}</p>}
+                    {allergenText(item.allergens) && (
+                      <p class="menu__item-allergens">Innehåller: {allergenText(item.allergens)}</p>
+                    )}
+                  </div>
+                  <span class="menu__tag" aria-hidden="false">
+                    {item.price} kr
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .menu__intro h2 {
+    margin-block: 0 0.3em;
+  }
+
+  .menu__kicker {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+  }
+
+  .menu__notice {
+    margin-top: 0.5em;
+    color: var(--color-text-muted);
+    font-style: italic;
+    max-width: 48ch;
+  }
+
+  .menu__categories {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  @media (min-width: 56em) {
+    .menu__categories {
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(3rem, 6vw, 5rem);
+    }
+  }
+
+  .menu__category h3 {
+    padding-bottom: 0.5em;
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .menu__items {
+    margin-top: 1.25rem;
+  }
+
+  .menu__item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding-block: 0.9rem;
+  }
+
+  .menu__item + .menu__item {
+    border-top: 1px dashed var(--color-line);
+  }
+
+  .menu__item-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.08rem;
+  }
+
+  .menu__item-desc {
+    margin-top: 0.2em;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+
+  .menu__item-allergens {
+    margin-top: 0.35em;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.01em;
+  }
+
+  .menu__tag {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.5em;
+    padding: 0.5em 0.9em;
+    margin-top: 0.15em;
+    background: var(--color-surface-strong, var(--color-surface));
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 0.95rem;
+    clip-path: var(--tag-clip, none);
+    transform: rotate(-1.4deg);
+  }
+
+  .menu__item:nth-child(even) .menu__tag {
+    transform: rotate(1.1deg);
+  }
+</style>

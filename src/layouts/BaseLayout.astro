@@ -1,0 +1,74 @@
+---
+// Delad sidram för alla tre versioner. Temat (färger/typsnitt) väljs INTE
+// här — varje version-sida importerar sin egen tokens-vX.css innan denna
+// layout renderas, så BaseLayout förblir identisk för v1/v2/v3.
+import "../styles/base.css";
+import { cafe } from "../data/cafe";
+
+interface Props {
+  title: string;
+  description: string;
+  theme: "v1" | "v2" | "v3";
+}
+
+const { title, description, theme } = Astro.props;
+
+// Bygg schema.org-data (CafeOrCoffeeShop) endast av fält som INTE är
+// platshållare — publicerar vi TODO-adresser som strukturerad data blir de
+// sökbara som om de vore riktiga, vilket är värre än att utelämna fältet.
+const hasRealAddress = !cafe.contact.address.placeholder;
+const hasRealPhone = !cafe.contact.phone.placeholder;
+const hasRealEmail = !cafe.contact.email.placeholder;
+const hasRealHours = !cafe.openingHours.placeholder;
+
+const jsonLd: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  name: cafe.name,
+  url: Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined,
+};
+
+if (hasRealAddress) {
+  jsonLd.address = {
+    "@type": "PostalAddress",
+    streetAddress: cafe.contact.address.value,
+  };
+}
+if (hasRealPhone) jsonLd.telephone = cafe.contact.phone.value;
+if (hasRealEmail) jsonLd.email = cafe.contact.email.value;
+if (hasRealHours) {
+  jsonLd.openingHoursSpecification = cafe.openingHours.regular.map((row) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: row.day,
+    // TODO: byt till maskinläsbara veckodagar (t.ex. "Monday") + opens/closes
+    // i ISO-tid när riktiga öppettider finns, i stället för fri text.
+    description: row.hours,
+  }));
+}
+const sameAs = [cafe.social.instagram, cafe.social.facebook]
+  .filter((s) => !s.placeholder && s.url)
+  .map((s) => s.url);
+if (sameAs.length) jsonLd.sameAs = sameAs;
+---
+
+<!doctype html>
+<html lang="sv" data-theme={theme}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <!--
+      TODO: ta bort noindex/nofollow ovan när kunden har valt version och
+      sajten är redo att bli sökbar. Under granskningsfasen ska /v1 /v2 /v3
+      inte indexeras separat av sökmotorer.
+    -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Hoppa till innehållet</a>
+    <slot />
+  </body>
+</html>

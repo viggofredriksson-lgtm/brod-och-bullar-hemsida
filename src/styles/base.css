@@ -1,0 +1,212 @@
+/*
+  base.css — delad grund för alla tre teman.
+
+  Allt som skiljer teman åt ska sitta i tokens-v1/v2/v3.css som CSS custom
+  properties (se CLAUDE.md). Den här filen känner bara till variabelnamnen,
+  aldrig konkreta färg-/fontvärden, så samma fil funkar oförändrad för alla
+  tre versionerna.
+*/
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100svh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Typografi ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display, 600);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.75rem, 6vw + 1rem, 5.5rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
+}
+
+h3 {
+  font-size: clamp(1.375rem, 1vw + 1rem, 1.75rem);
+}
+
+p {
+  max-width: 62ch;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--color-accent);
+}
+
+/* ---------- Layout-primitiv ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--content-width, 78rem);
+  margin-inline: auto;
+  padding-inline: var(--edge-padding, clamp(1.25rem, 4vw, 3rem));
+}
+
+.section {
+  padding-block: var(--section-padding, clamp(3.5rem, 8vw, 7rem));
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Skip-länk ---------- */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-unit, 1rem);
+  z-index: 100;
+  padding: 0.75em 1.25em;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius);
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: var(--space-unit, 1rem);
+}
+
+/* ---------- Fokusmarkering ---------- */
+
+:focus-visible {
+  outline: 3px solid var(--color-focus, var(--color-accent));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- Knappar ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.85em 1.6em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  border: var(--border-width, 1px) solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.button:hover {
+  background: var(--color-accent-strong, var(--color-accent));
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-line, currentColor);
+}
+
+.button--ghost:hover {
+  background: var(--color-surface);
+}

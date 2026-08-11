@@ -1,0 +1,58 @@
+/*
+  tokens-v1.css — "Varm & hantverk"
+
+  Paletten är inte hämtad från en generisk "cozy bakery"-idé utan från tre
+  konkreta ytor i caféet: den brända skorpan på ett nybakat bröd (accent),
+  mjölsäcksväven bakom disken (bakgrund, varmare och gråare än rent
+  off-white) och kanten på en välanvänd bakplåt (den nästan svarta brunton
+  som bär all text). Signaturdetaljen är prislappen i kassan — ett handskrivet
+  pris på en liten stämpelkant — som återkommer i menyn via --tag-clip.
+
+  Kontrastvärdena nedan är beräknade (WCAG 2.1):
+  text/bg 13.9:1, accent/bg 4.9:1, accent-strong/bg 7.9:1, muted/bg 7.0:1 —
+  alla klarar AA för normal text, de flesta klarar AAA.
+*/
+
+@import "@fontsource-variable/fraunces/standard.css";
+@import "@fontsource-variable/fraunces/standard-italic.css";
+@import "@fontsource-variable/newsreader/standard.css";
+
+:root {
+  /* Färg */
+  --color-bg: #f2ead9;
+  --color-surface: #e8dcc0;
+  --color-surface-strong: #ddccA6;
+  --color-text: #2a1b12;
+  --color-text-muted: #5c4a38;
+  --color-line: #c9b896;
+
+  --color-accent: #a8471b;
+  --color-accent-strong: #7a2e10;
+  --color-on-accent: #fbf6ec;
+
+  --color-ink: #2a1b12; /* mörk sektion, t.ex. footer/hero-overlay */
+  --color-ink-text: #fbf6ec;
+  --color-ink-accent: #e2a579;
+
+  --color-focus: #7a2e10;
+
+  /* Typografi */
+  --font-display: "Fraunces Variable", "Iowan Old Style", ui-serif, serif;
+  --font-body: "Newsreader Variable", "Iowan Old Style", ui-serif, serif;
+  --weight-display: 560;
+  font-optical-sizing: auto;
+
+  /* Form */
+  --radius: 3px;
+  --border-width: 1.5px;
+  --space-unit: 1rem;
+  --content-width: 76rem;
+  --shadow: 0 1px 2px rgba(42, 20, 8, 0.08), 0 14px 32px -18px rgba(42, 20, 8, 0.45);
+
+  /* Signaturdetalj: prislappens hackade kant (används i Menu.astro).
+     Odefinierad i v2/v3-stubbarna → faller tillbaka till "none" där. */
+  --tag-clip: polygon(
+    0% 15%, 6% 0%, 94% 0%, 100% 15%,
+    100% 85%, 94% 100%, 6% 100%, 0% 85%
+  );
+}

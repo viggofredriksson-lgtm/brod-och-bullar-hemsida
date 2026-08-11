@@ -1,0 +1,27 @@
+---
+import "../../styles/tokens-v1.css";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Hero from "../../components/Hero.astro";
+import About from "../../components/About.astro";
+import Menu from "../../components/Menu.astro";
+import OrderForm from "../../components/OrderForm.astro";
+import FindUs from "../../components/FindUs.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<BaseLayout
+  theme="v1"
+  title="Bröd och bullar — hantverksbageri och café"
+  description="Surdegsbröd, kanelbullar och kaffe, bakat på plats varje morgon. Beställ tårta eller catering, eller kom förbi på Storgatan."
+>
+  <Header />
+  <main id="main">
+    <Hero variant="bleed" />
+    <About />
+    <Menu />
+    <OrderForm />
+    <FindUs />
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,132 @@
+---
+// Hero med bakgrundsvideo + poster. Variant-prop styr layouten — det här
+// är den enda strukturella skillnaden som får finnas mellan teman (utöver
+// tokens), enligt CLAUDE.md.
+//
+// Video-strategin klarar sig helt utan JavaScript: <source media="..."> gör
+// att mobiler aldrig ens påbörjar nedladdningen av videofilen, och
+// "(prefers-reduced-motion: no-preference)" i samma media-fråga gör att
+// videon inte spelas för den som bett om mindre rörelse — i båda fallen
+// visas bara poster-bilden, som alltid renderas.
+import { cafe } from "../data/cafe";
+
+interface Props {
+  variant?: "bleed";
+}
+
+const { variant = "bleed" } = Astro.props;
+const { heading, subheading } = cafe.hero;
+const { videoMp4, videoWebm, poster } = cafe.heroMedia;
+const hasVideo = Boolean(videoMp4 || videoWebm);
+const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-preference)";
+---
+
+<section class={`hero hero--${variant}`} id="hero" aria-label="Bröd och bullar">
+  <div class="hero__media">
+    <img class="hero__poster" src={poster} alt="" />
+    {
+      hasVideo && (
+        <video
+          class="hero__video"
+          poster={poster}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="none"
+        >
+          {videoWebm && <source src={videoWebm} type="video/webm" media={motionQuery} />}
+          {videoMp4 && <source src={videoMp4} type="video/mp4" media={motionQuery} />}
+        </video>
+      )
+    }
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__content wrap">
+    <p class="eyebrow">Bageri &amp; café</p>
+    <h1>{heading}</h1>
+    <p class="hero__subheading">{subheading}</p>
+    <div class="hero__actions">
+      <a class="button" href="#meny">Se menyn</a>
+      <a class="button button--ghost button--on-dark" href="#bestallning">Beställ tårta</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: min(46rem, 86svh);
+    overflow: hidden;
+    color: var(--color-ink-text);
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__poster,
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__video {
+    /* Poster-elementet ligger kvar under videon som fallback om videon av
+       någon anledning inte kan spelas upp. */
+    position: relative;
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(0deg, rgba(20, 12, 6, 0.82) 0%, rgba(20, 12, 6, 0.35) 42%, rgba(20, 12, 6, 0.05) 68%),
+      linear-gradient(100deg, rgba(20, 12, 6, 0.55) 0%, rgba(20, 12, 6, 0) 55%);
+  }
+
+  .hero__content {
+    position: relative;
+    padding-block: clamp(3rem, 12vh, 6rem) clamp(3rem, 9vh, 4.5rem);
+    max-width: 42rem;
+  }
+
+  .hero__content h1 {
+    margin-block: 0.3em 0.5em;
+  }
+
+  .hero__subheading {
+    font-size: 1.15rem;
+    max-width: 34ch;
+    color: var(--color-ink-text);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .button--on-dark {
+    border-color: var(--color-ink-text);
+    color: var(--color-ink-text);
+  }
+
+  .button--on-dark:hover {
+    background: rgba(251, 246, 236, 0.12);
+  }
+
+  @media (max-width: 30em) {
+    .hero {
+      min-height: 34rem;
+    }
+  }
+</style>

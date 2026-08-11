@@ -1,0 +1,137 @@
+---
+import { cafe } from "../data/cafe";
+
+const { address, phone, email } = cafe.contact;
+const { regular, exceptions } = cafe.openingHours;
+---
+
+<section class="findus section" id="hitta-hit">
+  <div class="wrap findus__grid">
+    <div>
+      <p class="eyebrow">Storgatan, mitt i stan</p>
+      <h2>Hitta hit</h2>
+
+      <address class="findus__address">
+        {address.placeholder && <span class="findus__todo">TODO: </span>}{address.value}
+        <br />
+        {
+          phone.placeholder ? (
+            <span class="findus__todo">TODO: {phone.value}</span>
+          ) : (
+            <a href={`tel:${phone.value}`}>{phone.value}</a>
+          )
+        }
+        <br />
+        {
+          email.placeholder ? (
+            <span class="findus__todo">TODO: {email.value}</span>
+          ) : (
+            <a href={`mailto:${email.value}`}>{email.value}</a>
+          )
+        }
+      </address>
+
+      <h3 class="findus__hours-heading">Öppettider</h3>
+      {
+        cafe.openingHours.placeholder && (
+          <p class="findus__todo">TODO: öppettider är inte bekräftade av caféet än.</p>
+        )
+      }
+      <dl class="findus__hours">
+        {
+          regular.map((row) => (
+            <>
+              <dt>{row.day}</dt>
+              <dd>{row.hours}</dd>
+            </>
+          ))
+        }
+      </dl>
+      {
+        exceptions.length > 0 && (
+          <p class="findus__exceptions">
+            {exceptions.map((e) => `${e.label}: ${e.hours}`).join(" · ")}
+          </p>
+        )
+      }
+    </div>
+
+    <div class="findus__map" role="img" aria-label="TODO: karta över caféets läge saknas tills adressen är bekräftad">
+      <span>TODO: karta</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .findus__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    grid-template-columns: 1fr;
+  }
+
+  .findus__grid h2 {
+    margin-block: 0.3em 0.9em;
+  }
+
+  .findus__address {
+    font-style: normal;
+    line-height: 1.8;
+  }
+
+  .findus__address a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: 0.15em;
+  }
+
+  .findus__todo {
+    color: var(--color-accent-strong, var(--color-accent));
+  }
+
+  .findus__hours-heading {
+    margin-top: 1.75rem;
+  }
+
+  .findus__hours {
+    margin-top: 0.75rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 1.5rem;
+  }
+
+  .findus__hours dt {
+    color: var(--color-text-muted);
+  }
+
+  .findus__hours dd {
+    margin: 0;
+  }
+
+  .findus__exceptions {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .findus__map {
+    min-height: 20rem;
+    display: grid;
+    place-items: center;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-line);
+    border-radius: var(--radius);
+    color: var(--color-text-muted);
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  @media (min-width: 56em) {
+    .findus__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .findus__map {
+      min-height: 100%;
+    }
+  }
+</style>
