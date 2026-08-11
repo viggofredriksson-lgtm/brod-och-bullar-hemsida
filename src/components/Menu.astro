@@ -107,14 +107,14 @@ import { menu, allergensConfirmed } from "../data/menu";
     background: var(--color-surface-strong, var(--color-surface));
     color: var(--color-text);
     font-family: var(--font-display);
-    font-style: italic;
+    font-style: var(--tag-font-style, italic);
     font-weight: 600;
     font-size: 0.95rem;
     clip-path: var(--tag-clip, none);
-    transform: rotate(-1.4deg);
+    transform: rotate(var(--tag-rotate, -1.4deg));
   }
 
   .menu__item:nth-child(even) .menu__tag {
-    transform: rotate(1.1deg);
+    transform: rotate(var(--tag-rotate-alt, 1.1deg));
   }
 </style>

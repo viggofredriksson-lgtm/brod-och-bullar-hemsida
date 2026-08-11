@@ -1,15 +1,61 @@
 /*
-  tokens-v2.css — "Skandinaviskt rent" (STUB)
+  tokens-v2.css — "Skandinaviskt rent"
 
-  TODO: nästa arbetsomgång. Byggs enligt CLAUDE.md: lugnt, luftigt, produkten
-  i fokus. Grotesk med mycket whitespace, off-white + ett accentblått.
-  Samma variabelnamn som tokens-v1.css måste sättas här — base.css och
-  komponenterna är oförändrade, bara värdena skiljer.
+  Paletten är inte generisk "SaaS-blå" — accentfärgen är hämtad från havet
+  utanför Mollösund: den blygrå Bohuslän-blåtonen man ser i vattnet mellan
+  skären på en mulen dag, inte en klar sommarhimmel. Bakgrunden är en sval,
+  ljus off-white (inte varmt beige som v1, inte kritvit). Typsnittet är en
+  enda familj — Schibsted Grotesk, en norsk grotesk med egen karaktär i t.ex.
+  g:et och a:et — använt i flera vikter i stället för att blanda display- och
+  kroppstypsnitt, vilket ger den disciplin "rent" kräver.
 
-  Tills denna fylls i faller /v2 tillbaka på webbläsarens standardtypsnitt
-  och saknar färgtokens — sidan ska därför inte visas för kund förrän detta
-  är klart.
+  Signaturgreppet här är INTE prislappen från v1 (--tag-clip/--tag-rotate
+  lämnas odefinierade → Menu-komponenten faller tillbaka till en ren rak
+  rektangel utan rotation). v2:s enda djärva grepp sitter i Hero-varianten
+  "airy": en dramatiskt beskuren, nästan konstnärlig bildkolumn med mycket
+  luft — se Hero.astro.
+
+  Kontrastvärden (WCAG 2.1): text/bg 14.2:1, accent/bg 7.1:1,
+  muted/bg 5.8:1— alla klarar AA, de flesta AAA.
 */
 
+@import "@fontsource-variable/schibsted-grotesk";
+
 :root {
+  /* Färg */
+  --color-bg: #f5f4ef;
+  --color-surface: #eae9e2;
+  --color-surface-strong: #dce3e2;
+  --color-text: #1e2523;
+  --color-text-muted: #57615e;
+  --color-line: #d7d6cd;
+
+  --color-accent: #215870;
+  --color-accent-strong: #153b4b;
+  --color-on-accent: #f5f4ef;
+
+  --color-ink: #12262e;
+  --color-ink-text: #eff3f2;
+  --color-ink-accent: #8fbac9;
+
+  --color-focus: #153b4b;
+
+  /* Typografi — en familj, flera vikter, ingen display/body-uppdelning */
+  --font-display: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --weight-display: 600;
+
+  /* Form — skarpa hörn, tunnare linjer, mer luft */
+  --radius: 0px;
+  --border-width: 1px;
+  --space-unit: 1rem;
+  --content-width: 82rem;
+  --section-padding: clamp(4.5rem, 10vw, 9rem);
+  --shadow: 0 1px 2px rgba(18, 30, 30, 0.05);
+
+  /* Menyns prislapp: ingen klippt taggform, ingen rotation, ingen kursiv —
+     rak rektangel i linje med temats återhållsamhet. */
+  --tag-font-style: normal;
+  --tag-rotate: 0deg;
+  --tag-rotate-alt: 0deg;
 }

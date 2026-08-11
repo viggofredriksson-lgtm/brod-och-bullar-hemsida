@@ -1,15 +1,59 @@
 /*
-  tokens-v3.css — "Nostalgiskt konditori" (STUB)
+  tokens-v3.css — "Nostalgiskt konditori"
 
-  TODO: nästa arbetsomgång. Byggs enligt CLAUDE.md: 50-talets bageriskylt,
-  lekfullt. Display-font i rubriker, tightare sättning. Djupgrön/kräm med
-  guldaccent. Samma variabelnamn som tokens-v1.css måste sättas här —
-  base.css och komponenterna är oförändrade, bara värdena skiljer.
+  Paletten är hämtad från den klassiska 50-talsbageriskylten: djup
+  butelj­grön emalj med guldfoliebokstäver, på kritvit/kräm bakgrund — inte
+  en generisk "vintage"-mall. Rubrikfonten Boogaloo har den lekfulla,
+  handmålade skylt-känslan; kroppstexten Domine är en lugn, klassisk serif
+  som håller texten läsbar när rubrikerna redan tar all uppmärksamhet.
 
-  Tills denna fylls i faller /v3 tillbaka på webbläsarens standardtypsnitt
-  och saknar färgtokens — sidan ska därför inte visas för kund förrän detta
-  är klart.
+  Signaturgreppet: menyns prislapp (samma --tag-clip-mekanism som v1, se
+  Menu.astro) formas här som ett litet bandmärke med spetsiga ändar — som
+  prislappen på en gammal godisdisk — i stället för v1:s hackade
+  stämpelkant. --tag-rotate lämnas på 0 så bandformen får bära ensam.
+
+  Kontrastvärden (WCAG 2.1): text/bg 12.4:1, accent/bg 4.8:1,
+  accent-strong/bg 8.1:1 — alla klarar AA.
 */
 
+@import "@fontsource/boogaloo";
+@import "@fontsource-variable/domine";
+
 :root {
+  /* Färg */
+  --color-bg: #f6efdd;
+  --color-surface: #efe3c4;
+  --color-surface-strong: #e9d9a8;
+  --color-text: #17301f;
+  --color-text-muted: #4b6350;
+  --color-line: #d8c79a;
+
+  --color-accent: #8a611c;
+  --color-accent-strong: #5f4110;
+  --color-on-accent: #f6efdd;
+
+  --color-ink: #0f2e1b;
+  --color-ink-text: #f6efdd;
+  --color-ink-accent: #d8b84a;
+
+  --color-focus: #5f4110;
+
+  /* Typografi */
+  --font-display: "Boogaloo", "Baloo 2", ui-rounded, sans-serif;
+  --font-body: "Domine Variable", Georgia, ui-serif, serif;
+  --weight-display: 400;
+
+  /* Form — rundare, kompaktare, med lite mer skugga än v2 (skylt-relief) */
+  --radius: 6px;
+  --border-width: 1.5px;
+  --space-unit: 1rem;
+  --content-width: 74rem;
+  --shadow: 0 2px 4px rgba(15, 30, 15, 0.1), 0 12px 26px -16px rgba(15, 30, 15, 0.5);
+
+  /* Menyns prislapp: bandmärke med spetsiga ändar i stället för v1:s
+     hackade stämpelkant. Ingen rotation eller kursiv — formen bär redan. */
+  --tag-clip: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+  --tag-font-style: normal;
+  --tag-rotate: 0deg;
+  --tag-rotate-alt: 0deg;
 }

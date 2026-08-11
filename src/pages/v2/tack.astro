@@ -1,0 +1,32 @@
+---
+import "../../styles/tokens-v2.css";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { cafe } from "../../data/cafe";
+---
+
+<BaseLayout theme="v2" title={`Tack för din beställning — ${cafe.name}`} description="Vi har tagit emot din beställning och återkommer inom kort.">
+  <Header />
+  <main id="main" class="section wrap">
+    <p class="eyebrow">Mottaget</p>
+    <h1>Tack för din beställning!</h1>
+    <p class="tack__text">
+      Vi hör av oss så snart vi kan för att bekräfta datum och pris. Har du bråttom går det
+      också bra att sms:a oss på {cafe.contact.phone.value}.
+    </p>
+    <a class="button" href="/v2#hero">Tillbaka till startsidan</a>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .tack__text {
+    margin-block: 1rem 2rem;
+    max-width: 50ch;
+  }
+
+  h1 {
+    margin-block: 0.3em 0.5em;
+  }
+</style>

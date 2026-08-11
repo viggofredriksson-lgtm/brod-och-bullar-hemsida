@@ -49,10 +49,14 @@
   --content-width: 76rem;
   --shadow: 0 1px 2px rgba(42, 20, 8, 0.08), 0 14px 32px -18px rgba(42, 20, 8, 0.45);
 
-  /* Signaturdetalj: prislappens hackade kant (används i Menu.astro).
-     Odefinierad i v2/v3-stubbarna → faller tillbaka till "none" där. */
+  /* Signaturdetalj: prislappens hackade kant + lätt handskriven vinkling
+     (används i Menu.astro). Andra teman sätter egna värden eller lämnar
+     dem odefinierade → faller tillbaka till raka, orörda taggar. */
   --tag-clip: polygon(
     0% 15%, 6% 0%, 94% 0%, 100% 15%,
     100% 85%, 94% 100%, 6% 100%, 0% 85%
   );
+  --tag-font-style: italic;
+  --tag-rotate: -1.4deg;
+  --tag-rotate-alt: 1.1deg;
 }

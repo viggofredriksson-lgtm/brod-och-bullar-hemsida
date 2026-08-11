@@ -1,7 +1,10 @@
 ---
-// Hero med bakgrundsvideo + poster. Variant-prop styr layouten — det här
-// är den enda strukturella skillnaden som får finnas mellan teman (utöver
-// tokens), enligt CLAUDE.md.
+// Hero med bakgrundsvideo + poster. Variant-prop styr layouten — det är
+// den enda strukturella skillnaden mellan teman (utöver tokens), enligt
+// CLAUDE.md. Markupen är identisk för båda varianterna; bara CSS skiljer:
+//   "bleed" (v1, v3): fullbredd, text ovanpå med mörk scrim för kontrast.
+//   "airy"  (v2): inramad bildpanel i en luftig grid, ingen scrim — texten
+//                  sitter bredvid på temats vanliga ljusa bakgrund.
 //
 // Video-strategin klarar sig helt utan JavaScript: <source media="..."> gör
 // att mobiler aldrig ens påbörjar nedladdningen av videofilen, och
@@ -11,10 +14,11 @@
 import { cafe } from "../data/cafe";
 
 interface Props {
-  variant?: "bleed";
+  variant?: "bleed" | "airy";
 }
 
 const { variant = "bleed" } = Astro.props;
+const onDark = variant === "bleed";
 const { heading, subheading } = cafe.hero;
 const { videoMp4, videoWebm, poster } = cafe.heroMedia;
 const hasVideo = Boolean(videoMp4 || videoWebm);
@@ -49,25 +53,15 @@ const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-prefer
     <p class="hero__subheading">{subheading}</p>
     <div class="hero__actions">
       <a class="button" href="#meny">Se menyn</a>
-      <a class="button button--ghost button--on-dark" href="#bestallning">Beställ tårta</a>
+      <a class={onDark ? "button button--ghost button--on-dark" : "button button--ghost"} href="#bestallning">
+        Beställ tårta
+      </a>
     </div>
   </div>
 </section>
 
 <style>
-  .hero {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: min(46rem, 86svh);
-    overflow: hidden;
-    color: var(--color-ink-text);
-  }
-
-  .hero__media {
-    position: absolute;
-    inset: 0;
-  }
+  /* ---------- Delat ---------- */
 
   .hero__poster,
   .hero__video {
@@ -84,20 +78,6 @@ const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-prefer
     position: relative;
   }
 
-  .hero__scrim {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(0deg, rgba(20, 12, 6, 0.82) 0%, rgba(20, 12, 6, 0.35) 42%, rgba(20, 12, 6, 0.05) 68%),
-      linear-gradient(100deg, rgba(20, 12, 6, 0.55) 0%, rgba(20, 12, 6, 0) 55%);
-  }
-
-  .hero__content {
-    position: relative;
-    padding-block: clamp(3rem, 12vh, 6rem) clamp(3rem, 9vh, 4.5rem);
-    max-width: 42rem;
-  }
-
   .hero__content h1 {
     margin-block: 0.3em 0.5em;
   }
@@ -105,7 +85,6 @@ const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-prefer
   .hero__subheading {
     font-size: 1.15rem;
     max-width: 34ch;
-    color: var(--color-ink-text);
   }
 
   .hero__actions {
@@ -113,6 +92,40 @@ const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-prefer
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 2rem;
+  }
+
+  /* ---------- Variant: bleed (v1, v3) ---------- */
+
+  .hero--bleed {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: min(46rem, 86svh);
+    overflow: hidden;
+    color: var(--color-ink-text);
+  }
+
+  .hero--bleed .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero--bleed .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(0deg, rgba(20, 12, 6, 0.82) 0%, rgba(20, 12, 6, 0.35) 42%, rgba(20, 12, 6, 0.05) 68%),
+      linear-gradient(100deg, rgba(20, 12, 6, 0.55) 0%, rgba(20, 12, 6, 0) 55%);
+  }
+
+  .hero--bleed .hero__content {
+    position: relative;
+    padding-block: clamp(3rem, 12vh, 6rem) clamp(3rem, 9vh, 4.5rem);
+    max-width: 42rem;
+  }
+
+  .hero--bleed .hero__subheading {
+    color: var(--color-ink-text);
   }
 
   .button--on-dark {
@@ -125,8 +138,53 @@ const motionQuery = "(min-width: 61.25em) and (prefers-reduced-motion: no-prefer
   }
 
   @media (max-width: 30em) {
-    .hero {
+    .hero--bleed {
       min-height: 34rem;
+    }
+  }
+
+  /* ---------- Variant: airy (v2) ---------- */
+  /* Ingen fullbredds-bleed, ingen scrim. Bilden ramas in som ett fotografi
+     i en luftig grid i stället för att vara en bakgrund text ligger ovanpå. */
+
+  .hero--airy {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    max-width: var(--content-width, 76rem);
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    padding-block: var(--section-padding, clamp(3.5rem, 8vw, 7rem));
+    color: var(--color-text);
+  }
+
+  .hero--airy .hero__media {
+    position: relative;
+    order: 2;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .hero--airy .hero__scrim {
+    display: none;
+  }
+
+  .hero--airy .hero__content {
+    order: 1;
+    max-width: 34rem;
+    padding-inline: 0;
+    align-self: center;
+  }
+
+  .hero--airy .hero__subheading {
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 56em) {
+    .hero--airy {
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 0.85fr);
+      align-items: center;
     }
   }
 </style>

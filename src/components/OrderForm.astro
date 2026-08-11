@@ -13,6 +13,11 @@
 // är bekräftad.
 import { cafe } from "../data/cafe";
 
+interface Props {
+  theme: "v1" | "v2" | "v3";
+}
+
+const { theme } = Astro.props;
 const orderTypes = ["Tårta", "Catering", "Företagsfika", "Annat"];
 const { leadTimes, note } = cafe.ordering;
 const smsHref = `sms:${cafe.contact.phone.value.replace(/\s/g, "")}`;
@@ -57,7 +62,7 @@ const smsHref = `sms:${cafe.contact.phone.value.replace(/\s/g, "")}`;
       method="POST"
       data-netlify="true"
       netlify-honeypot="bot-field"
-      action="/v1/tack"
+      action={`/${theme}/tack`}
     >
       <input type="hidden" name="form-name" value="bestallning" />
       <p class="order__hp">
