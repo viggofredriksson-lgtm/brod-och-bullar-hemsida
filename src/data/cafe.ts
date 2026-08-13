@@ -21,7 +21,7 @@ export const cafe = {
   hero: {
     heading: "Bröd och bullar mitt i Mollösund",
     subheading:
-      "Vi säljer Herr Bröds nybakade sortiment på Sandvägen — beställ i god tid inför helg och kalas, eller kom förbi och se vad som finns kvar i disken.",
+      "Vi säljer Herr Bröds nybakade sortiment i Mollösund — beställ i god tid inför helg och kalas, eller kom förbi och se vad som finns kvar i disken.",
   },
 
   // TODO: en tredje stycke saknas fortfarande — vem/vilka driver butiken
@@ -32,7 +32,7 @@ export const cafe = {
   about: {
     heading: "Om oss",
     paragraphs: [
-      "Mollösunds Bröd & Bullar är den lilla butiken på Sandvägen där du hittar Herr Bröds sortiment av surdegsbröd, vetebullar, längder och bakverk — mitt i hjärtat av Mollösund.",
+      "Mollösunds Bröd & Bullar är den lilla butiken där du hittar Herr Bröds sortiment av surdegsbröd, vetebullar, längder och bakverk — mitt i hjärtat av Mollösund.",
       "Sortimentet växlar med säsongen, och en del av det mest efterfrågade — mousse­tårtor, glutenfritt, veganskt och andra specialbeställningar — behöver beställas i god tid. Se villkoren under Beställ nedan.",
     ],
   },
@@ -67,18 +67,51 @@ export const cafe = {
     },
   },
 
-  // Beställningsvillkor för förbeställningar (tårtor, catering m.m.), hämtade
-  // ordagrant ur prislistan "Sommaren 2026". Det här är caféets EGNA
-  // ledtider för sitt sms-flöde — vi visar dem som kontext i
-  // beställningsformuläret så förväntningarna stämmer, även om formuläret
-  // själv går via mejl (se CLAUDE.md, avgränsat scope).
+  // Beställningsvillkor för förbeställningar, hämtade ordagrant ur
+  // prislistan "Sommaren 2026". `type`, `days` och `placeholder` (för
+  // "vad vill du beställa"-fältet) driver <OrderShop>/<SpecialRequest> —
+  // typvalen speglar exakt de här raderna, så deadline och ex.-text kan
+  // räknas fram automatiskt i stället för att kunden själv ska hålla reda
+  // på dem. `key` är den stabila referens som `menu.ts` kategorier pekar
+  // mot via `leadTimeKey` — enda källan för hur många dagars ledtid varje
+  // bucket kräver.
+  //
+  // TODO: "Catering" och "Företagsfika" fanns i ursprungsbriefen men är
+  // INTE bekräftade i prislistan — okänt om caféet faktiskt tar såna
+  // beställningar. Fråga kunden. Tills dess får den typen av förfrågan gå
+  // via "Annat".
   ordering: {
     placeholder: false,
     leadTimes: [
-      { items: "Bröd, frallor, baguette, fransmän och bullar", deadline: "senast kl. 20:00, två dagar innan leverans" },
-      { items: "Tårtor & bakelser (ordinarie sortiment) samt kondisbitar", deadline: "senast kl. 20:00, fyra dagar innan leverans" },
-      { items: "Moussetårtor samt glutenfria, veganska, laktosfria eller andra specialtårtor/bakelser", deadline: "senast kl. 20:00, sex dagar innan leverans" },
+      {
+        key: "brod",
+        type: "Bröd, frallor & bullar",
+        items: "Bröd, frallor, baguette, fransmän och bullar",
+        deadline: "senast kl. 20:00, två dagar innan leverans",
+        days: 2,
+        placeholder: "T.ex. 2 rågbröd och 6 kanelbullar",
+      },
+      {
+        key: "tarta",
+        type: "Tårta, bakelse eller kondisbit",
+        items: "Tårtor & bakelser (ordinarie sortiment) samt kondisbitar",
+        deadline: "senast kl. 20:00, fyra dagar innan leverans",
+        days: 4,
+        placeholder: "T.ex. mandeltårta för 12 personer, gärna med bär ovanpå",
+      },
+      {
+        key: "moussetarta",
+        type: "Moussetårta eller specialbeställning",
+        items: "Moussetårtor samt glutenfria, veganska, laktosfria eller andra specialtårtor/bakelser",
+        deadline: "senast kl. 20:00, sex dagar innan leverans",
+        days: 6,
+        placeholder: "T.ex. glutenfri moussetårta med jordgubb, för 10 personer",
+      },
     ],
+    other: {
+      type: "Annat",
+      placeholder: "Berätta vad du vill beställa och till när",
+    },
     note: "Herr Bröd levererar inte på söndagar — räkna med det när du planerar din beställning.",
   },
 

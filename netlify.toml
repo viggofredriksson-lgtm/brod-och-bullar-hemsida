@@ -2,9 +2,12 @@
   command = "npm run build"
   publish = "dist"
 
-# Beställningsformuläret (src/components/OrderForm.astro) renderas som ren
-# statisk HTML med data-netlify="true", vilket räcker för att Netlify ska
-# hitta och registrera det vid bygget — inget särskilt formulär-plugin
-# behövs. Ställ in mottagaradress för formulärnotiser i Netlifys
+# Beställningssektionen (src/components/OrderForm.astro) innehåller TVÅ
+# statiska Netlify-formulär, båda renderade som ren HTML med
+# data-netlify="true" — inget särskilt formulär-plugin behövs:
+#   - "bestallning" (src/components/OrderShop.astro) — vardagssortimentet
+#   - "specialbestallning" (src/components/SpecialRequest.astro) — tårta,
+#     moussetårta och annat utan fast pris
+# Ställ in mottagaradress för formulärnotiser för BÅDA i Netlifys
 # adminpanel (Site settings → Forms → Notifications) mot
 # cafe.contact.orderEmail i src/data/cafe.ts när den är bekräftad.

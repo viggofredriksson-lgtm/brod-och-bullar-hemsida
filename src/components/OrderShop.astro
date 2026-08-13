@@ -1,0 +1,504 @@
+---
+// Shopen: vardagssortimentet (bröd, frallor, bullar, kondisbitar, småkakor
+// — allt med fast pris, se src/data/menu.ts) som en lista man trycker
+// plus/minus på i stället för att fylla i ett formulär. Mejlas till
+// caféet via Netlify Forms, ingen betalning här — betalas i butiken vid
+// upphämtning.
+//
+// Fältnamnen (`qty_<kategori-id>_<vara-id>`) kommer från menu.ts `id`-
+// slugs — måste finnas i den STATISKA markupen (inte bara injiceras av
+// JS) för att Netlifys byggtidsdetektering ska hitta dem, och för att
+// beställningen ska gå att skicka även utan JS. `<script>` längst ner
+// bygger bara om varje antal-input till en trevligare stegrare och räknar
+// fram en läsbar sammanfattning + tidigaste hämtdatum utifrån vad som
+// faktiskt ligger i korgen — rena förbättringar ovanpå ett formulär som
+// redan fungerar utan dem.
+import { menu } from "../data/menu";
+import { cafe } from "../data/cafe";
+
+interface Props {
+  theme: "v1" | "v2" | "v3";
+}
+
+const { theme } = Astro.props;
+
+const leadTimesByKey = Object.fromEntries(cafe.ordering.leadTimes.map((lt) => [lt.key, lt]));
+const defaultLeadTime = cafe.ordering.leadTimes[0];
+const defaultHint = `Beställ ${defaultLeadTime.deadline}.`;
+const smsHref = `sms:${cafe.contact.phone.value.replace(/\s/g, "")}`;
+---
+
+<div class="shop">
+  <p class="eyebrow">Sortimentet</p>
+  <h2>Beställ</h2>
+  <p>
+    Tryck plus på det du vill ha — vi räknar ut när det tidigast går att hämta. Betalas i butiken
+    vid upphämtning, inte här.
+  </p>
+
+  <p class="shop__note">
+    Vill du ha bröd eller bullar redan i morgon? Sms:a i stället, det går fortare:{" "}
+    <a href={smsHref}>{cafe.contact.phone.value}</a>.
+  </p>
+
+  {
+    cafe.contact.orderEmail.placeholder && (
+      <p class="shop__todo">TODO: mejladress för beställningar via formuläret är inte satt än.</p>
+    )
+  }
+
+  <form
+    class="shop__form"
+    name="bestallning"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    action={`/${theme}/tack`}
+  >
+    <input type="hidden" name="form-name" value="bestallning" />
+    <p class="shop__hp">
+      <label>
+        Lämna det här fältet tomt
+        <input name="bot-field" tabindex="-1" autocomplete="off" />
+      </label>
+    </p>
+
+    <div class="shop__row shop__row--split">
+      <div>
+        <label for="shop-namn">Namn *</label>
+        <input id="shop-namn" name="namn" type="text" autocomplete="name" required />
+      </div>
+      <div>
+        <label for="shop-epost">E-post *</label>
+        <input id="shop-epost" name="epost" type="email" autocomplete="email" required />
+      </div>
+    </div>
+
+    <div class="shop__row shop__row--split">
+      <div>
+        <label for="shop-telefon">Telefon</label>
+        <input id="shop-telefon" name="telefon" type="tel" autocomplete="tel" />
+      </div>
+      <div>
+        <label for="shop-datum">Önskat hämtdatum *</label>
+        <input id="shop-datum" name="datum" type="date" required />
+      </div>
+    </div>
+
+    <p class="shop__hint" id="shop-datum-hint" aria-live="polite" data-default-hint={defaultHint}>
+      {defaultHint}
+    </p>
+
+    <input type="hidden" name="sammanfattning" id="shop-sammanfattning" value="" />
+
+    <div class="shop__categories">
+      {
+        menu.map((category) => {
+          const leadTime = leadTimesByKey[category.leadTimeKey];
+          return (
+            <fieldset class="shop__category">
+              <legend>{category.category}</legend>
+              <ul role="list" class="shop__items">
+                {category.items.map((item) => {
+                  const fieldName = `qty_${category.id}_${item.id}`;
+                  return (
+                    <li class="shop__item">
+                      <label class="shop__item-label" for={fieldName}>
+                        <span class="shop__item-name">{item.name}</span>
+                        <span class="shop__tag">{item.price} kr</span>
+                      </label>
+                      <div class="shop__stepper" data-stepper>
+                        <input
+                          class="shop__qty"
+                          id={fieldName}
+                          name={fieldName}
+                          type="number"
+                          min="0"
+                          max="99"
+                          step="1"
+                          value="0"
+                          inputmode="numeric"
+                          data-item-name={item.name}
+                          data-item-price={item.price}
+                          data-lead-days={leadTime.days}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </fieldset>
+          );
+        })
+      }
+    </div>
+
+    <div class="shop__summary" id="shop-summary" aria-live="polite" role="status">
+      <p>Inget valt än — tryck plus på det du vill ha.</p>
+    </div>
+
+    <div class="shop__row">
+      <label for="shop-allergier">Meddelande</label>
+      <input id="shop-allergier" name="allergier" type="text" placeholder="T.ex. allergier" />
+    </div>
+
+    <button class="button" type="submit">Skicka beställning</button>
+  </form>
+</div>
+
+<style>
+  .shop > p {
+    margin-top: 0.9em;
+  }
+
+  .shop h2 {
+    margin-block: 0.3em 0.6em;
+  }
+
+  .shop__note {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .shop__note a {
+    color: var(--color-accent-strong, var(--color-accent));
+  }
+
+  .shop__todo {
+    margin-top: 0.9em;
+    color: var(--color-accent-strong, var(--color-accent));
+    font-size: 0.9rem;
+  }
+
+  .shop__form {
+    margin-top: 1.75rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .shop__hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .shop__row {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .shop__row--split {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 34em) {
+    .shop__row--split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .shop__form label {
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .shop__form input:not(.shop__qty) {
+    width: 100%;
+    padding: 0.7em 0.85em;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-line);
+    border-radius: var(--radius);
+  }
+
+  .shop__hint {
+    margin-top: -0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .shop__categories {
+    margin-top: 0.5rem;
+    display: grid;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  @media (min-width: 56em) {
+    .shop__categories {
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(2.5rem, 5vw, 4rem);
+    }
+  }
+
+  .shop__category {
+    min-width: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .shop__category legend {
+    display: block;
+    width: 100%;
+    padding: 0 0 0.5em;
+    border-bottom: var(--border-width) solid var(--color-line);
+    font-family: var(--font-display);
+    font-weight: var(--weight-display, 600);
+    font-size: 1.15rem;
+  }
+
+  .shop__items {
+    margin-top: 0.5rem;
+  }
+
+  .shop__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    padding-block: 0.65rem;
+  }
+
+  .shop__item + .shop__item {
+    border-top: 1px dashed var(--color-line);
+  }
+
+  .shop__item-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 14rem;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .shop__item-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+
+  .shop__tag {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.75em;
+    padding: 0.4em 0.75em;
+    background: var(--color-surface-strong, var(--color-surface));
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-style: var(--tag-font-style, italic);
+    font-weight: 600;
+    font-size: 0.85rem;
+    clip-path: var(--tag-clip, none);
+    transform: rotate(var(--tag-rotate, -1.4deg));
+  }
+
+  .shop__item:nth-child(even) .shop__tag {
+    transform: rotate(var(--tag-rotate-alt, 1.1deg));
+  }
+
+  .shop__stepper {
+    flex: none;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: stretch;
+    border: var(--border-width) solid var(--color-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .shop__stepper-btn {
+    appearance: none;
+    border: none;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    line-height: 1;
+    width: 2.35rem;
+    min-height: 2.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shop__stepper-btn:hover {
+    background: var(--color-surface-strong, var(--color-surface));
+  }
+
+  .shop__stepper-btn:first-child {
+    border-right: var(--border-width) solid var(--color-line);
+  }
+
+  .shop__stepper-btn:last-child {
+    border-left: var(--border-width) solid var(--color-line);
+  }
+
+  .shop__qty {
+    width: 2.75rem;
+    min-height: 2.35rem;
+    text-align: center;
+    background: var(--color-bg);
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+
+  .shop__qty::-webkit-outer-spin-button,
+  .shop__qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .shop__summary {
+    margin-top: 0.5rem;
+    padding: 1rem 1.15rem;
+    background: var(--color-surface);
+    border-top: 1px dashed var(--color-line);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+  }
+
+  .shop__summary p {
+    margin: 0;
+  }
+
+  .shop__summary p + p {
+    margin-top: 0.35em;
+  }
+
+  .shop__summary-total {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+  }
+
+  .shop__form .button {
+    justify-self: start;
+    border: none;
+  }
+</style>
+
+<script>
+  // Progressiv förbättring: bygger om varje antal-input till en stegrare,
+  // räknar fram en läsbar sammanställning och tidigaste hämtdatum utifrån
+  // korgens innehåll. Formuläret är fullt användbart utan detta — de
+  // statiska number-inputs och standardtexten ovan täcker no-JS-fallet.
+  const form = document.querySelector('form[name="bestallning"]') as HTMLFormElement | null;
+  const qtyInputs = Array.from(document.querySelectorAll<HTMLInputElement>(".shop__qty"));
+  const summaryEl = document.getElementById("shop-summary");
+  const summaryField = document.getElementById("shop-sammanfattning") as HTMLInputElement | null;
+  const dateInput = document.getElementById("shop-datum") as HTMLInputElement | null;
+  const dateHint = document.getElementById("shop-datum-hint") as HTMLElement | null;
+
+  function toISODate(date: Date) {
+    return date.toISOString().slice(0, 10);
+  }
+
+  function clamp(value: number) {
+    return Math.min(99, Math.max(0, value));
+  }
+
+  function createStepper(input: HTMLInputElement) {
+    const wrap = input.closest<HTMLElement>("[data-stepper]");
+    if (!wrap) return;
+
+    const itemName = input.dataset.itemName ?? "";
+
+    const minus = document.createElement("button");
+    minus.type = "button";
+    minus.className = "shop__stepper-btn";
+    minus.textContent = "−";
+    minus.setAttribute("aria-label", `Minska antal ${itemName}`);
+    minus.addEventListener("click", () => {
+      input.value = String(clamp(Number(input.value || "0") - 1));
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    const plus = document.createElement("button");
+    plus.type = "button";
+    plus.className = "shop__stepper-btn";
+    plus.textContent = "+";
+    plus.setAttribute("aria-label", `Öka antal ${itemName}`);
+    plus.addEventListener("click", () => {
+      input.value = String(clamp(Number(input.value || "0") + 1));
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    wrap.insertBefore(minus, input);
+    wrap.appendChild(plus);
+  }
+
+  function selectedItems() {
+    return qtyInputs
+      .map((input) => ({ input, qty: Number(input.value || "0") }))
+      .filter(({ qty }) => qty > 0);
+  }
+
+  function updateSummary() {
+    const selected = selectedItems();
+
+    if (!summaryEl) return;
+
+    if (!selected.length) {
+      summaryEl.innerHTML = "<p>Inget valt än — tryck plus på det du vill ha.</p>";
+      if (summaryField) summaryField.value = "";
+      return;
+    }
+
+    const lines = selected.map(({ input, qty }) => `${qty}x ${input.dataset.itemName}`);
+    const total = selected.reduce(
+      (sum, { input, qty }) => sum + qty * Number(input.dataset.itemPrice || "0"),
+      0,
+    );
+
+    summaryEl.innerHTML = `
+      <p class="shop__summary-lines">${lines.join(", ")}</p>
+      <p class="shop__summary-total">Uppskattat: ca ${total} kr — betalas i butiken.</p>
+    `;
+
+    if (summaryField) summaryField.value = lines.join(", ");
+  }
+
+  function updateDeadline() {
+    if (!dateInput) return;
+
+    const selected = selectedItems();
+    const days = selected.length
+      ? Math.max(...selected.map(({ input }) => Number(input.dataset.leadDays || "0")))
+      : Number(qtyInputs[0]?.dataset.leadDays ?? "2");
+
+    const earliest = new Date();
+    earliest.setDate(earliest.getDate() + days);
+    dateInput.min = toISODate(earliest);
+
+    if (!dateHint) return;
+
+    if (!selected.length) {
+      dateHint.textContent = dateHint.dataset.defaultHint ?? "";
+      return;
+    }
+
+    const formatted = earliest.toLocaleDateString("sv-SE", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+    dateHint.textContent = `Hämtas tidigast ${formatted} — ${days} dagars framförhållning krävs för det du valt.`;
+  }
+
+  qtyInputs.forEach(createStepper);
+
+  form?.addEventListener("input", (event) => {
+    if ((event.target as HTMLElement | null)?.classList.contains("shop__qty")) {
+      updateSummary();
+      updateDeadline();
+    }
+  });
+
+  updateSummary();
+  updateDeadline();
+</script>

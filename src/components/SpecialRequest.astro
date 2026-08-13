@@ -1,0 +1,213 @@
+---
+// Sekundär, mindre framträdande förfrågan för allt som inte har fast pris
+// och därför inte kan ligga i <OrderShop>: tårta, bakelser i specialantal,
+// moussetårta och glutenfria/veganska/laktosfria specialbeställningar samt
+// en fri "annat"-kategori. Priset bestäms av caféet efter förfrågan, inte
+// på sajten.
+//
+// Samma script-mönster som tidigare version av OrderForm.astro:
+// applyOption/toISODate uppdaterar deadline-hint och exempeltext utifrån
+// vald typ — formuläret fungerar fullt ut utan JS (statiska attribut
+// nedan täcker no-JS-fallet).
+import { cafe } from "../data/cafe";
+
+interface Props {
+  theme: "v1" | "v2" | "v3";
+}
+
+const { theme } = Astro.props;
+const { leadTimes, other, note } = cafe.ordering;
+// Bröd/frallor/bullar hanteras av <OrderShop> — visa bara de typer som
+// faktiskt kräver ett pris-på-förfrågan-flöde här.
+const requestTypes = [...leadTimes.filter((lt) => lt.key !== "brod"), other];
+const firstRequestType = requestTypes[0];
+const firstRequestDeadline = "deadline" in firstRequestType ? firstRequestType.deadline : "";
+const smsHref = `sms:${cafe.contact.phone.value.replace(/\s/g, "")}`;
+---
+
+<div class="request">
+  <p class="eyebrow">Fest, kalas, något speciellt</p>
+  <h3>Tårta eller något annat?</h3>
+  <p>
+    Moussetårta, glutenfritt, veganskt, eller något vi inte har på sortimentslistan — berätta vad
+    du har i tankarna så återkommer vi med pris och bekräftelse.
+  </p>
+  <p class="request__note">{note}</p>
+  <p class="request__note">
+    Går det snabbare att bara sms:a? Skicka till <a href={smsHref}>{cafe.contact.phone.value}</a>.
+  </p>
+
+  <form
+    class="request__form"
+    name="specialbestallning"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    action={`/${theme}/tack-special`}
+  >
+    <input type="hidden" name="form-name" value="specialbestallning" />
+    <p class="request__hp">
+      <label>
+        Lämna det här fältet tomt
+        <input name="bot-field" tabindex="-1" autocomplete="off" />
+      </label>
+    </p>
+
+    <div class="request__row">
+      <label for="special-namn">Namn *</label>
+      <input id="special-namn" name="namn" type="text" autocomplete="name" required />
+    </div>
+
+    <div class="request__row request__row--split">
+      <div>
+        <label for="special-epost">E-post *</label>
+        <input id="special-epost" name="epost" type="email" autocomplete="email" required />
+      </div>
+      <div>
+        <label for="special-telefon">Telefon</label>
+        <input id="special-telefon" name="telefon" type="tel" autocomplete="tel" />
+      </div>
+    </div>
+
+    <div class="request__row request__row--split">
+      <div>
+        <label for="special-typ">Vad gäller det? *</label>
+        <select id="special-typ" name="typ" required>
+          {
+            requestTypes.map((t) => (
+              <option
+                value={t.type}
+                data-placeholder={t.placeholder}
+                data-deadline={"deadline" in t ? t.deadline : "Hör av dig så kollar vi vad som går."}
+              >
+                {t.type}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+      <div>
+        <label for="special-datum">Önskat datum *</label>
+        <input id="special-datum" name="datum" type="date" required />
+        <p class="request__hint" id="special-datum-hint" aria-live="polite">{firstRequestDeadline}</p>
+      </div>
+    </div>
+
+    <div class="request__row">
+      <label for="special-meddelande">Vad vill du beställa? *</label>
+      <textarea
+        id="special-meddelande"
+        name="meddelande"
+        rows="3"
+        required
+        placeholder={requestTypes[0].placeholder}
+      ></textarea>
+    </div>
+
+    <div class="request__row">
+      <label for="special-allergier">Meddelande</label>
+      <input id="special-allergier" name="allergier" type="text" placeholder="T.ex. allergier" />
+    </div>
+
+    <button class="button button--ghost" type="submit">Skicka förfrågan</button>
+  </form>
+</div>
+
+<style>
+  .request > p {
+    margin-top: 0.9em;
+  }
+
+  .request h3 {
+    margin-block: 0.3em 0.5em;
+  }
+
+  .request__note {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+  }
+
+  .request__note a {
+    color: var(--color-accent-strong, var(--color-accent));
+  }
+
+  .request__form {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1.1rem;
+    max-width: 42rem;
+  }
+
+  .request__hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .request__row {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .request__row--split {
+    display: grid;
+    gap: 1.15rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 34em) {
+    .request__row--split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .request label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .request input,
+  .request select,
+  .request textarea {
+    width: 100%;
+    padding: 0.65em 0.8em;
+    background: var(--color-bg);
+    border: var(--border-width) solid var(--color-line);
+    border-radius: var(--radius);
+  }
+
+  .request textarea {
+    resize: vertical;
+  }
+
+  .request__hint {
+    margin: 0.35em 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+</style>
+
+<script>
+  // Samma mönster som <OrderShop>: byter deadline-hint och exempeltext så
+  // kunden slipper räkna själv. Formuläret funkar utan JS — statiska
+  // attribut ovan täcker no-JS-fallet.
+  const typeSelect = document.getElementById("special-typ") as HTMLSelectElement | null;
+  const dateHint = document.getElementById("special-datum-hint");
+  const messageField = document.getElementById("special-meddelande") as HTMLTextAreaElement | null;
+
+  function applyOption(option: HTMLOptionElement) {
+    if (messageField && option.dataset.placeholder) {
+      messageField.placeholder = option.dataset.placeholder;
+    }
+    if (dateHint && option.dataset.deadline) {
+      dateHint.textContent = option.dataset.deadline;
+    }
+  }
+
+  typeSelect?.addEventListener("change", () => {
+    const selected = typeSelect.selectedOptions[0];
+    if (selected) applyOption(selected);
+  });
+
+  const initial = typeSelect?.selectedOptions[0];
+  if (initial) applyOption(initial);
+</script>
