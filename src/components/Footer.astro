@@ -3,7 +3,7 @@ import { cafe } from "../data/cafe";
 
 const { address, phone, email } = cafe.contact;
 const { regular, seasonal, closedForSeason } = cafe.openingHours;
-const { instagram, facebook } = cafe.social;
+const { instagram, facebook, tiktok } = cafe.social;
 const year = new Date().getFullYear();
 ---
 
@@ -56,6 +56,15 @@ const year = new Date().getFullYear();
               <span class="todo">TODO: Facebook</span>
             ) : (
               <a href={facebook.url}>Facebook</a>
+            )
+          }
+        </li>
+        <li>
+          {
+            tiktok.placeholder ? (
+              <span class="todo">TODO: TikTok</span>
+            ) : (
+              <a href={tiktok.url}>TikTok</a>
             )
           }
         </li>

@@ -135,10 +135,21 @@ export const cafe = {
   },
 
   social: {
-    // TODO: vi har sett caféets Instagram-BIO (skickad som skärmdump) men
-    // inte fått själva konto-URL:en eller ett Facebook-konto bekräftat.
-    instagram: { url: "", handle: "Instagram-konto", placeholder: true },
-    facebook: { url: "", handle: "Facebook-sida", placeholder: true },
+    instagram: {
+      url: "https://www.instagram.com/moll.osundsbrodochbullar",
+      handle: "@moll.osundsbrodochbullar",
+      placeholder: false,
+    },
+    facebook: {
+      url: "https://www.facebook.com/people/Moll%C3%B6sunds-Br%C3%B6d-och-Bullar/61559357141750/",
+      handle: "Mollösunds Bröd och Bullar",
+      placeholder: false,
+    },
+    tiktok: {
+      url: "https://www.tiktok.com/@mollosundsbrodbullar",
+      handle: "@mollosundsbrodbullar",
+      placeholder: false,
+    },
   },
 
   map: {

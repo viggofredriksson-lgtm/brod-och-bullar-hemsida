@@ -49,7 +49,7 @@ if (hasRealHours) {
     description: row.hours,
   }));
 }
-const sameAs = [cafe.social.instagram, cafe.social.facebook]
+const sameAs = [cafe.social.instagram, cafe.social.facebook, cafe.social.tiktok]
   .filter((s) => !s.placeholder && s.url)
   .map((s) => s.url);
 if (sameAs.length) jsonLd.sameAs = sameAs;
